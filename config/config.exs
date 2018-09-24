@@ -21,6 +21,45 @@ config :drizzle,
     zone6: 23,
     zone7: 24,
     zone8: 25
+  },
+  schedule: %{
+    sun: [
+      %{zone: 5, time_on: 2000, time_off: 2020},
+      %{zone: 6, time_on: 2030, time_off: 2050},
+      %{zone: 7, time_on: 2100, time_off: 2120}
+    ],
+    mon: [
+      %{zone: 1, time_on: 500, time_off: 515},
+      %{zone: 3, time_on: 530, time_off: 545},
+      %{zone: 4, time_on: 700, time_off: 715}
+    ],
+    tue: [
+      %{zone: 4, time_on: 700, time_off: 715},
+      %{zone: 5, time_on: 2000, time_off: 2020},
+      %{zone: 6, time_on: 2030, time_off: 2050},
+      %{zone: 7, time_on: 2100, time_off: 2120}
+    ],
+    wed: [
+      %{zone: 1, time_on: 500, time_off: 515},
+      %{zone: 3, time_on: 530, time_off: 545},
+      %{zone: 4, time_on: 700, time_off: 715}
+    ],
+    thu: [
+      %{zone: 4, time_on: 700, time_off: 715},
+      %{zone: 5, time_on: 2000, time_off: 2020},
+      %{zone: 6, time_on: 2030, time_off: 2050},
+      %{zone: 7, time_on: 2100, time_off: 2120}
+    ],
+    fri: [
+      %{zone: 1, time_on: 500, time_off: 515},
+      %{zone: 3, time_on: 530, time_off: 545},
+      %{zone: 4, time_on: 700, time_off: 715}
+    ],
+    sat: [
+      %{zone: 1, time_on: 500, time_off: 515},
+      %{zone: 3, time_on: 530, time_off: 545},
+      %{zone: 4, time_on: 700, time_off: 715}
+    ]
   }
 
 config :drizzle, :default,

@@ -20,6 +20,7 @@ defmodule Drizzle.Application do
     [
       # Starts a worker by calling: Drizzle.Worker.start_link(arg)
       # {Drizzle.Worker, arg},
+      {Drizzle.Init, []},
       {Drizzle.Scheduler, %{}},
       {Drizzle.Forecaster, %{}}
     ]

@@ -1,6 +1,8 @@
 defmodule Drizzle.Scheduler do
   use GenServer
 
+  @schedule Application.get_env(:drizzle, :schedule, %{})
+
   def start_link(_args) do
     GenServer.start_link(__MODULE__, %{})
   end
@@ -16,7 +18,7 @@ defmodule Drizzle.Scheduler do
     # Is a sprinkler scheduled to start or stop now?
     # if so Drizzle.activate_zone/1 or Drizzle.deactivate_zone/2
     IO.puts("Checking watering schedule for on/off times")
-    Drizzle.schedule()
+    execute_scheduled_events()
     schedule_work()
     {:noreply, state}
   end
@@ -40,5 +42,9 @@ defmodule Drizzle.Scheduler do
       |> DateTime.to_time()
 
     time.hour * 100 + time.minute
+  end
+
+  defp execute_scheduled_events do
+    IO.inspect(@schedule)
   end
 end

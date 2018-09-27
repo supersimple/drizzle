@@ -5,6 +5,8 @@
 # is restricted to this project.
 use Mix.Config
 
+import_config "#{Mix.Project.config()[:target]}.exs"
+
 config :nerves, interface: :wlan0
 
 key_mgmt = System.get_env("NERVES_NETWORK_KEY_MGMT") || "WPA-PSK"

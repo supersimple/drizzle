@@ -24,7 +24,6 @@ defmodule Drizzle.TodaysEvents do
     Enum.group_by(today, fn {_z, avail, _d} -> avail end)
     |> Enum.map(fn {key, list} -> reduce_event_groups(key, list) end)
     |> Enum.reduce([], fn m, acc -> acc ++ m[:events] end)
-    |> IO.inspect()
   end
 
   defp reduce_event_groups(key, list) do

@@ -24,43 +24,46 @@ config :drizzle,
     zone7: 24,
     zone8: 25
   },
+  # watering times are defined as key {start_time, end_time}
+  available_watering_times: %{
+    morning: {500, 800},
+    evening: {2100, 2300}
+  },
+  # schedule is defined as {zone, watering_time_key, duration_in_minutes}
   schedule: %{
     sun: [
-      %{zone: 5, time_on: 2000, time_off: 2020},
-      %{zone: 6, time_on: 2030, time_off: 2050},
-      %{zone: 7, time_on: 2100, time_off: 2120}
+      {:zone4, :morning, 20},
+      {:zone5, :morning, 20},
+      {:zone6, :morning, 20},
+      {:zone7, :morning, 10}
     ],
     mon: [
-      %{zone: 1, time_on: 500, time_off: 515},
-      %{zone: 3, time_on: 530, time_off: 545},
-      %{zone: 4, time_on: 700, time_off: 715}
+      {:zone1, :morning, 20},
+      {:zone3, :morning, 20}
     ],
     tue: [
-      %{zone: 4, time_on: 700, time_off: 715},
-      %{zone: 5, time_on: 2000, time_off: 2020},
-      %{zone: 6, time_on: 2030, time_off: 2050},
-      %{zone: 7, time_on: 2100, time_off: 2120}
+      {:zone4, :morning, 20},
+      {:zone5, :morning, 20},
+      {:zone6, :morning, 20},
+      {:zone7, :morning, 10}
     ],
     wed: [
-      %{zone: 1, time_on: 500, time_off: 515},
-      %{zone: 3, time_on: 530, time_off: 545},
-      %{zone: 4, time_on: 700, time_off: 715}
+      {:zone1, :morning, 20},
+      {:zone3, :morning, 20}
     ],
     thu: [
-      %{zone: 4, time_on: 700, time_off: 715},
-      %{zone: 5, time_on: 2000, time_off: 2020},
-      %{zone: 6, time_on: 2030, time_off: 2050},
-      %{zone: 7, time_on: 2100, time_off: 2120}
+      {:zone4, :morning, 20},
+      {:zone5, :morning, 20},
+      {:zone6, :morning, 20},
+      {:zone7, :morning, 10}
     ],
     fri: [
-      %{zone: 1, time_on: 500, time_off: 515},
-      %{zone: 3, time_on: 530, time_off: 545},
-      %{zone: 4, time_on: 700, time_off: 715}
+      {:zone1, :morning, 20},
+      {:zone3, :morning, 20},
+      {:zone5, :evening, 10}
     ],
     sat: [
-      %{zone: 1, time_on: 500, time_off: 515},
-      %{zone: 3, time_on: 530, time_off: 545},
-      %{zone: 4, time_on: 700, time_off: 715}
+      {:zone7, :morning, 10}
     ]
   }
 

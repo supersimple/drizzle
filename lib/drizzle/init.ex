@@ -1,8 +1,6 @@
 defmodule Drizzle.Init do
   use GenServer
 
-  alias ElixirALE.GPIO
-
   @gpio_module Application.get_env(:drizzle, :gpio_module, ElixirALE.GPIO)
   @zone_pins Application.get_env(:drizzle, :zone_pins, %{})
 
@@ -10,7 +8,7 @@ defmodule Drizzle.Init do
     GenServer.start_link(__MODULE__, [])
   end
 
-  def init(state) do
+  def init(_state) do
     state =
       Enum.map(@zone_pins, fn {name, pin} ->
         register_pin(name, pin)

@@ -1,5 +1,5 @@
 defmodule Drizzle.WeatherData do
-  def start_link do
+  def start_link() do
     init = for _n <- 1..12, do: nil
     Agent.start_link(fn -> init end, name: __MODULE__)
   end

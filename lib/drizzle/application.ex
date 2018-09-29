@@ -13,6 +13,7 @@ defmodule Drizzle.Application do
     opts = [strategy: :one_for_one, name: Drizzle.Supervisor]
     Drizzle.WeatherData.start_link()
     Supervisor.start_link(children(@target), opts)
+    Drizzle.TodaysEvents.start_link()
   end
 
   # List all child processes to be supervised

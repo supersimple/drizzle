@@ -10,6 +10,7 @@ defmodule Drizzle.Weather do
   @winter_months Application.get_env(:drizzle, :winter_months, [])
   @low_temp 40
   @high_temp 90
+  @default_temp 50
 
   @doc """
   weather_adjustment_factor/0 determines adjustments to make to watering time
@@ -59,6 +60,9 @@ defmodule Drizzle.Weather do
       {d["temperature"], d["precipIntensity"], d["precipProbability"]}
     end)
   end
+
+  # Used when application has just started up
+  defp weather_info([]), do: {@default_temp, @default_temp, 0}
 
   defp weather_info(data) do
     with {cumulative_amount, cumulative_percent} <-

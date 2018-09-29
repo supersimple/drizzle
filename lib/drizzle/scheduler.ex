@@ -1,8 +1,11 @@
 defmodule Drizzle.Scheduler do
   use GenServer
 
+  alias Drizzle.TodaysEvents
+
   @schedule Application.get_env(:drizzle, :schedule, %{})
   @days_as_atoms {:sun, :mon, :tue, :wed, :thu, :fri, :sat}
+  @timezone Application.get_env(:drizzle, :timezone, %{})
 
   def start_link(_args) do
     GenServer.start_link(__MODULE__, %{})
@@ -27,7 +30,7 @@ defmodule Drizzle.Scheduler do
   end
 
   defp current_day_of_week do
-    "America/Denver"
+    @timezone
     |> Timex.now()
     |> DateTime.to_date()
     |> Date.day_of_week()
@@ -36,7 +39,7 @@ defmodule Drizzle.Scheduler do
 
   defp current_time do
     time =
-      "America/Denver"
+      @timezone
       |> Timex.now()
       |> DateTime.to_time()
 
@@ -45,11 +48,11 @@ defmodule Drizzle.Scheduler do
 
   defp execute_scheduled_events do
     if current_time() == 0 || true do
-      Drizzle.TodaysEvents.reset()
-      Drizzle.TodaysEvents.update(Map.get(@schedule, current_day_of_week()))
+      TodaysEvents.reset()
+      TodaysEvents.update(Map.get(@schedule, current_day_of_week()))
     end
 
-    case Enum.find(Drizzle.TodaysEvents.current_state(), fn {time, _a, _z} ->
+    case Enum.find(TodaysEvents.current_state(), fn {time, _a, _z} ->
            time == current_time()
          end) do
       {_time, :on, zone} -> Drizzle.IO.activate_zone(zone)

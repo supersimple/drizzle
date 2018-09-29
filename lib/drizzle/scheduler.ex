@@ -49,7 +49,9 @@ defmodule Drizzle.Scheduler do
       Drizzle.TodaysEvents.update(Map.get(@schedule, current_day_of_week()))
     end
 
-    case Enum.find(sched, fn {time, _a, _z} -> time == current_time() end) do
+    case Enum.find(Drizzle.TodaysEvents.current_state(), fn {time, _a, _z} ->
+           time == current_time()
+         end) do
       {_time, :on, zone} -> Drizzle.IO.activate_zone(zone)
       {_time, :off, zone} -> Drizzle.IO.deactivate_zone(zone)
       _ -> "Nothing to do right now."

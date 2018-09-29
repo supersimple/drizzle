@@ -63,7 +63,8 @@ config :drizzle,
       {:zone5, :evening, 10}
     ],
     sat: [
-      {:zone7, :morning, 10}
+      {:zone7, :morning, 10},
+      {:zone5, :morning, 10}
     ]
   }
 

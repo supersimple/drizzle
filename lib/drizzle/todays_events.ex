@@ -24,15 +24,7 @@ defmodule Drizzle.TodaysEvents do
     Enum.group_by(today, fn {_z, avail, _d} -> avail end)
     |> Enum.map(fn {key, list} -> reduce_event_groups(key, list) end)
     |> Enum.reduce([], fn m, acc -> acc ++ m[:events] end)
-
-    # [
-    #   {2100, :on, :zone5},
-    #   {2110, :off, :zone5},
-    #   {500, :on, :zone1},
-    #   {520, :off, :zone1},
-    #   {520, :on, :zone3},
-    #   {540, :off, :zone3}
-    # ]
+    |> IO.inspect()
   end
 
   defp reduce_event_groups(key, list) do
@@ -40,10 +32,10 @@ defmodule Drizzle.TodaysEvents do
     {start_time, _stop_time} = Map.get(@available_watering_times, key)
 
     Enum.reduce(list, %{last_time: start_time, events: []}, fn {zone, _grp, duration}, acc ->
-      # events should be in format: {500, :on, :zone2}
       new_start_event = {acc[:last_time], :on, zone}
       acc = update_in(acc[:last_time], &(&1 + duration * factor))
       new_stop_event = {acc[:last_time], :off, zone}
+      acc = update_in(acc[:last_time], &(&1 + 1))
       update_in(acc[:events], &(&1 ++ [new_start_event, new_stop_event]))
     end)
   end

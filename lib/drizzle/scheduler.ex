@@ -44,23 +44,16 @@ defmodule Drizzle.Scheduler do
   end
 
   defp execute_scheduled_events do
-    # Check current time
-    # Is a sprinkler scheduled to start or stop now?
-    # if so Drizzle.activate_zone/1 or Drizzle.deactivate_zone/2
     if current_time() == 0 || true do
       Drizzle.TodaysEvents.reset()
       Drizzle.TodaysEvents.update(Map.get(@schedule, current_day_of_week()))
     end
 
-    # read the schedule
-    # [
-    #   {2100, :on, :zone5},
-    #   {2110, :off, :zone5},
-    #   {500, :on, :zone1},
-    #   {520, :off, :zone1},
-    #   {520, :on, :zone3},
-    #   {540, :off, :zone3}
-    # ]
+    case Enum.find(sched, fn {time, _a, _z} -> time == current_time() end) do
+      {_time, :on, zone} -> Drizzle.IO.activate_zone(zone)
+      {_time, :off, zone} -> Drizzle.IO.deactivate_zone(zone)
+      _ -> "Nothing to do right now."
+    end
   end
 
   defp day_number_as_atom(index) do

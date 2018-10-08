@@ -8,8 +8,8 @@ defmodule Drizzle.Weather do
                        longitude: -104.8287546
                      })
   @winter_months Application.get_env(:drizzle, :winter_months, [])
-  @low_temp 40
-  @high_temp 90
+  @low_temp 0
+  @high_temp 100
   @default_temp 50
 
   @doc """

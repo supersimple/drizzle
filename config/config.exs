@@ -16,14 +16,14 @@ config :drizzle,
   timezone: "America/Denver",
   winter_months: [],
   zone_pins: %{
-    zone1: 4,
-    zone2: 17,
-    zone3: 18,
-    zone4: 27,
-    zone5: 22,
-    zone6: 23,
-    zone7: 24,
-    zone8: 25
+    zone1: 7,
+    zone2: 8,
+    zone3: 25,
+    zone4: 24,
+    zone5: 23,
+    zone6: 18,
+    zone7: 15,
+    zone8: 14
   },
   # watering times are defined as key {start_time, end_time}
   available_watering_times: %{

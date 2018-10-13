@@ -7,6 +7,8 @@ defmodule Drizzle.TodaysEvents do
   end
 
   def update(today) do
+    IO.puts("UPDATING TODAYS EVENTS")
+
     Agent.update(__MODULE__, fn _state ->
       calculate_start_stop_time(today)
     end)

@@ -30,8 +30,7 @@ defmodule Drizzle.Scheduler do
   end
 
   defp current_day_of_week do
-    @timezone
-    |> Timex.now()
+    DateTime.utc_now()
     |> DateTime.to_date()
     |> Date.day_of_week()
     |> day_number_as_atom()
@@ -39,15 +38,14 @@ defmodule Drizzle.Scheduler do
 
   defp current_time do
     time =
-      @timezone
-      |> Timex.now()
+      DateTime.utc_now()
       |> DateTime.to_time()
 
     time.hour * 100 + time.minute
   end
 
   defp execute_scheduled_events do
-    if current_time() == 0 || true do
+    if current_time() == 0 || TodaysEvents.current_state() == [] do
       TodaysEvents.reset()
       TodaysEvents.update(Map.get(@schedule, current_day_of_week()))
     end

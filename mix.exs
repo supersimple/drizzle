@@ -41,12 +41,15 @@ defmodule Drizzle.MixProject do
       {:elixir_ale, "~> 1.0"},
       {:shoehorn, "~> 0.2"},
       {:darkskyx, "~> 0.1.4"},
-      {:timex, "~> 3.4"}
+      {:poison, "~> 3.0", override: true}
     ] ++ deps(@target)
   end
 
   # Specify target specific dependencies
-  defp deps("host"), do: []
+  defp deps("host"),
+    do: [
+      {:timex, "~> 3.4"}
+    ]
 
   defp deps(target) do
     [

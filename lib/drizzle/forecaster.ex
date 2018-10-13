@@ -3,6 +3,7 @@ defmodule Drizzle.Forecaster do
   alias Drizzle.Weather
 
   def start_link(_args) do
+    IO.puts("INITIALIZING FORECASTER")
     GenServer.start_link(__MODULE__, %{})
   end
 

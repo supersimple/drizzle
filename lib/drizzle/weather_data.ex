@@ -1,10 +1,13 @@
 defmodule Drizzle.WeatherData do
   def start_link() do
+    IO.puts("INITIALIZING WEATHERDATA")
     init = for _n <- 1..12, do: nil
     Agent.start_link(fn -> init end, name: __MODULE__)
   end
 
   def update(next_24_hours) do
+    IO.puts("UPDATING WEATHERDATA")
+
     Agent.update(__MODULE__, fn state ->
       Enum.slice(state, 1..12) ++ next_24_hours
     end)

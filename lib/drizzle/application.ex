@@ -13,6 +13,7 @@ defmodule Drizzle.Application do
     opts = [strategy: :one_for_one, name: Drizzle.Supervisor]
     Drizzle.WeatherData.start_link()
     Supervisor.start_link(children(@target), opts)
+    Drizzle.TodaysEvents.start_link()
   end
 
   # List all child processes to be supervised
@@ -20,8 +21,6 @@ defmodule Drizzle.Application do
     [
       # Starts a worker by calling: Drizzle.Worker.start_link(arg)
       # {Drizzle.Worker, arg},
-      {Drizzle.Scheduler, %{}},
-      {Drizzle.Forecaster, %{}}
     ]
   end
 
@@ -29,6 +28,9 @@ defmodule Drizzle.Application do
     [
       # Starts a worker by calling: Drizzle.Worker.start_link(arg)
       # {Drizzle.Worker, arg},
+      {Drizzle.Init, []},
+      {Drizzle.Scheduler, %{}},
+      {Drizzle.Forecaster, %{}}
     ]
   end
 end

@@ -5,36 +5,74 @@
 # is restricted to this project.
 use Mix.Config
 
-config :nerves, interface: :wlan0
+import_config "#{Mix.Project.config()[:target]}.exs"
 
-key_mgmt = System.get_env("NERVES_NETWORK_KEY_MGMT") || "WPA-PSK"
+config :nerves,
+  interface: :wlan0,
+  ssid: System.get_env("NERVES_NETWORK_SSID"),
+  psk: System.get_env("NERVES_NETWORK_PSK"),
+  key_mgmt: System.get_env("NERVES_NETWORK_KEY_MGMT")
 
 config :drizzle,
-  location: %{latitude: 39.3898838, longitude: -104.8287546},
+  location: %{latitude: System.get_env("LATITUDE"), longitude: System.get_env("LONGITUDE")},
+  utc_offset: -6,
   winter_months: [:jan, :feb, :nov, :dec],
   zone_pins: %{
-    zone1: 4,
-    zone2: 17,
-    zone3: 18,
-    zone4: 27,
-    zone5: 22,
-    zone6: 23,
-    zone7: 24,
-    zone8: 25
+    zone1: 7,
+    zone2: 8,
+    zone3: 25,
+    zone4: 24,
+    zone5: 23,
+    zone6: 18,
+    zone7: 15,
+    zone8: 14
+  },
+  # watering times are defined as key {start_time, end_time}
+  available_watering_times: %{
+    morning: {500, 800},
+    evening: {2100, 2300}
+  },
+  # schedule is defined as {zone, watering_time_key, duration_in_minutes}
+  schedule: %{
+    sun: [
+      {:zone4, :morning, 20},
+      {:zone5, :morning, 20},
+      {:zone6, :morning, 20},
+      {:zone7, :morning, 10}
+    ],
+    mon: [
+      {:zone1, :morning, 20},
+      {:zone3, :morning, 20}
+    ],
+    tue: [
+      {:zone4, :morning, 20},
+      {:zone5, :morning, 20},
+      {:zone6, :morning, 20},
+      {:zone7, :morning, 10}
+    ],
+    wed: [
+      {:zone1, :morning, 20},
+      {:zone3, :morning, 20}
+    ],
+    thu: [
+      {:zone4, :morning, 20},
+      {:zone5, :morning, 20},
+      {:zone6, :morning, 20},
+      {:zone7, :morning, 10}
+    ],
+    fri: [
+      {:zone1, :morning, 20},
+      {:zone3, :morning, 20},
+      {:zone5, :evening, 10}
+    ],
+    sat: [
+      {:zone7, :morning, 10},
+      {:zone5, :morning, 10}
+    ]
   }
 
-config :drizzle, :default,
-  wlan0: [
-    ssid: System.get_env("NERVES_NETWORK_SSID"),
-    psk: System.get_env("NERVES_NETWORK_PSK"),
-    key_mgmt: String.to_atom(key_mgmt)
-  ],
-  eth0: [
-    ipv4_address_method: :dhcp
-  ]
-
 config :darkskyx,
-  api_key: System.get_env("DARKSKY_API_KEY") || "b684189af566c4f854398b246a54665c",
+  api_key: System.get_env("DARKSKY_API_KEY"),
   defaults: [
     units: "us",
     lang: "en"

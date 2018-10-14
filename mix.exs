@@ -38,9 +38,10 @@ defmodule Drizzle.MixProject do
   defp deps do
     [
       {:nerves, "~> 1.0", runtime: false},
+      {:elixir_ale, "~> 1.0"},
       {:shoehorn, "~> 0.2"},
       {:darkskyx, "~> 0.1.4"},
-      {:timex, "~> 3.4"}
+      {:poison, "~> 3.0", override: true}
     ] ++ deps(@target)
   end
 
@@ -51,7 +52,6 @@ defmodule Drizzle.MixProject do
     [
       {:nerves_runtime, "~> 0.4"},
       {:nerves_network, "0.3.7-rc0"},
-      {:elixir_ale, "~> 1.0"},
       {:nerves_time, "~> 0.2"}
     ] ++ system(target)
   end

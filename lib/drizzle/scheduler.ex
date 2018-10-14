@@ -1,6 +1,12 @@
 defmodule Drizzle.Scheduler do
   use GenServer
 
+  alias Drizzle.TodaysEvents
+
+  @schedule Application.get_env(:drizzle, :schedule, %{})
+  @days_as_atoms {:zero, :sun, :mon, :tue, :wed, :thu, :fri, :sat}
+  @utc_offset Application.get_env(:drizzle, :utc_offset, 0)
+
   def start_link(_args) do
     GenServer.start_link(__MODULE__, %{})
   end
@@ -12,11 +18,8 @@ defmodule Drizzle.Scheduler do
   end
 
   def handle_info(:work, state) do
-    # Check current time
-    # Is a sprinkler scheduled to start or stop now?
-    # if so Drizzle.activate_zone/1 or Drizzle.deactivate_zone/2
     IO.puts("Checking watering schedule for on/off times")
-    Drizzle.schedule()
+    execute_scheduled_events()
     schedule_work()
     {:noreply, state}
   end
@@ -27,18 +30,55 @@ defmodule Drizzle.Scheduler do
   end
 
   defp current_day_of_week do
-    "America/Denver"
-    |> Timex.now()
+    DateTime.utc_now()
     |> DateTime.to_date()
     |> Date.day_of_week()
+    |> adjust_for_utc_offset()
+    |> day_number_as_atom()
   end
 
   defp current_time do
     time =
-      "America/Denver"
-      |> Timex.now()
+      DateTime.utc_now()
       |> DateTime.to_time()
+      |> Time.add(60 * 60 * @utc_offset)
 
     time.hour * 100 + time.minute
   end
+
+  defp execute_scheduled_events do
+    if current_time() == 0 || TodaysEvents.current_state() == [] do
+      TodaysEvents.reset()
+      TodaysEvents.update(Map.get(@schedule, current_day_of_week()))
+    end
+
+    case Enum.find(TodaysEvents.current_state(), fn {time, _a, _z} ->
+           time == current_time()
+         end) do
+      {_time, :on, zone} -> Drizzle.IO.activate_zone(zone)
+      {_time, :off, zone} -> Drizzle.IO.deactivate_zone(zone)
+      _ -> "Nothing to do right now."
+    end
+  end
+
+  defp day_number_as_atom(index) do
+    elem(@days_as_atoms, index)
+  end
+
+  defp adjust_for_utc_offset(day_of_week) do
+    utc_time = DateTime.utc_now() |> DateTime.to_time()
+
+    case utc_time.hour + @utc_offset do
+      time when time < 0 -> -1
+      time when time >= 24 -> 1
+      _ -> 0
+    end
+    |> offset_day_of_week(day_of_week)
+  end
+
+  defp offset_day_of_week(0, day_of_week), do: day_of_week
+  defp offset_day_of_week(1, day_of_week) when day_of_week < 7, do: day_of_week + 1
+  defp offset_day_of_week(1, 7), do: 1
+  defp offset_day_of_week(-1, day_of_week) when day_of_week > 1, do: day_of_week - 1
+  defp offset_day_of_week(-1, 1), do: 7
 end

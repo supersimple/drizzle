@@ -13,7 +13,7 @@ key_mgmt = System.get_env("NERVES_NETWORK_KEY_MGMT") || "WPA-PSK"
 
 config :drizzle,
   location: %{latitude: 39.3898838, longitude: -104.8287546},
-  timezone: "America/Denver",
+  utc_offset: -6,
   winter_months: [],
   zone_pins: %{
     zone1: 7,

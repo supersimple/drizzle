@@ -4,8 +4,8 @@ defmodule Drizzle.Scheduler do
   alias Drizzle.TodaysEvents
 
   @schedule Application.get_env(:drizzle, :schedule, %{})
-  @days_as_atoms {:sun, :mon, :tue, :wed, :thu, :fri, :sat}
-  @timezone Application.get_env(:drizzle, :timezone, %{})
+  @days_as_atoms {:zero, :sun, :mon, :tue, :wed, :thu, :fri, :sat}
+  @utc_offset Application.get_env(:drizzle, :utc_offset, 0)
 
   def start_link(_args) do
     GenServer.start_link(__MODULE__, %{})
@@ -30,16 +30,19 @@ defmodule Drizzle.Scheduler do
   end
 
   defp current_day_of_week do
-    DateTime.utc_now()
-    |> DateTime.to_date()
-    |> Date.day_of_week()
-    |> day_number_as_atom()
+    utc_day_of_week =
+      DateTime.utc_now()
+      |> DateTime.to_date()
+      |> Date.day_of_week()
+      |> adjust_for_utc_offset()
+      |> day_number_as_atom()
   end
 
   defp current_time do
     time =
       DateTime.utc_now()
       |> DateTime.to_time()
+      |> Time.add(60 * 60 * @utc_offset)
 
     time.hour * 100 + time.minute
   end
@@ -62,4 +65,21 @@ defmodule Drizzle.Scheduler do
   defp day_number_as_atom(index) do
     elem(@days_as_atoms, index)
   end
+
+  defp adjust_for_utc_offset(day_of_week) do
+    utc_time = DateTime.utc_now() |> DateTime.to_time()
+
+    case utc_time.hour + @utc_offset do
+      time when time < 0 -> -1
+      time when time >= 24 -> 1
+      _ -> 0
+    end
+    |> offset_day_of_week(day_of_week)
+  end
+
+  defp offset_day_of_week(0, day_of_week), do: day_of_week
+  defp offset_day_of_week(1, day_of_week) when day_of_week < 7, do: day_of_week + 1
+  defp offset_day_of_week(1, 7), do: 1
+  defp offset_day_of_week(-1, day_of_week) when day_of_week > 1, do: day_of_week - 1
+  defp offset_day_of_week(-1, 1), do: 7
 end

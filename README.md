@@ -1,23 +1,5 @@
 # Drizzle
 
-## To Do
-
-Make a mock of the GPIO module to use on host.
-```
-# target config
-config :my_app, MyApp.HardwareLayer, [
-   implementation: MyApp.HardwareLayer.ElixirAleImplementation
-]
-# host config
-config :my_app, MyApp.HardwareLayer, [
-   implementation: MyApp.HardwareLayer.StubImplementation
-]
-```
-Change schedule to allow for flexible watering times.
-- ex. instead of setting zone1 to run from 500-515 on monday, set it to run
-for 15 minutes on monday, regardless of time. That will allow for the
-adjustment factor without overlapping other zone schedules.
-
 ## Targets
 
 Nerves applications produce images for hardware targets based on the

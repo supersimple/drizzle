@@ -1,5 +1,41 @@
 # Drizzle
 
+Drizzle is a Nerves-based home sprinkler system.
+It is designed to support up to 8 zones, and will automatically adjust watering
+times given local weather data.
+By default, the watering times will increase gradually as the temperature reaches
+a predetermined threshold (90ºF) and will decrease gradually based on recent and
+upcoming precipitation.
+The system will also shut down when the temperature drops below a predetermined
+threshold (40ºF). You also have the option to set "Winter months", which are
+months where the system will not run regardless of temperature.
+
+## Configuration
+
+For the system to work properly, you need to export some ENV variables.
+
+For wifi access, set the following vars:
+NERVES_NETWORK_SSID=<your SSID here>
+NERVES_NETWORK_PSK=<your Wifi password here>
+NERVES_NETWORK_KEY_MGMT="WPA-PSK"
+
+For weather forecasts, set the following:
+LATITUDE=<your local latitude>
+LONGITUDE=<your local longitude>
+DARKSKY_API_KEY=<your 32 character API key>
+_Weather forecasts are retrieved from Dark Sky. You can get a free API key at:
+[https://darksky.net/dev](https://darksky.net/dev)._
+
+## How It Works
+
+When your device starts up it runs through the setup.
+- Starts the weather data agent, which stores state for the previous 12 hours and next 24 hours of weather. Until the system has been online for 12 hours, your previous 12 hours will not be set.
+- Connects to wifi.
+- Registers each of your zones with a corresponding GPIO pin on your device.
+- Initializes a schedule of todays events. (This will happen at midnight each day or whenever the schedule for today is empty.) This means starting up a genserver and loading it with the schedule from your config file.
+- Starts a recurring genserver that checks the weather each hour and updates the weather data agent.
+- Each minute the scheduler checks if there is a scheduled event for the current time. Events are either to activate or deactivate a zone. If an event is scheduled, the GPIO sends the correct signal to the relay board to fulfill the request.  
+
 ## Targets
 
 Nerves applications produce images for hardware targets based on the

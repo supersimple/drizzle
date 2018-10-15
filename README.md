@@ -1,5 +1,3 @@
-# Drizzle
-
 ![logo](https://i.imgur.com/6kYR90I.png)
 
 Drizzle is a Nerves-based home sprinkler system.

@@ -1,4 +1,4 @@
-# Drizzle
+![logo](https://i.imgur.com/6kYR90I.png)
 
 Drizzle is a Nerves-based home sprinkler system.
 It is designed to support up to 8 zones, and will automatically adjust watering
@@ -15,14 +15,14 @@ months where the system will not run regardless of temperature.
 For the system to work properly, you need to export some ENV variables.
 
 For wifi access, set the following vars:
-NERVES_NETWORK_SSID=<your SSID here>
-NERVES_NETWORK_PSK=<your Wifi password here>
-NERVES_NETWORK_KEY_MGMT="WPA-PSK"
+- `NERVES_NETWORK_SSID=<your SSID here>`
+- `NERVES_NETWORK_PSK=<your Wifi password here>`
+- `NERVES_NETWORK_KEY_MGMT="WPA-PSK"`
 
 For weather forecasts, set the following:
-LATITUDE=<your local latitude>
-LONGITUDE=<your local longitude>
-DARKSKY_API_KEY=<your 32 character API key>
+- `LATITUDE=<your local latitude>`
+- `LONGITUDE=<your local longitude>`
+- `DARKSKY_API_KEY=<your 32 character API key>`
 _Weather forecasts are retrieved from Dark Sky. You can get a free API key at:
 [https://darksky.net/dev](https://darksky.net/dev)._
 

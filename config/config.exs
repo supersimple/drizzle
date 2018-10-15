@@ -7,12 +7,14 @@ use Mix.Config
 
 import_config "#{Mix.Project.config()[:target]}.exs"
 
-config :nerves, interface: :wlan0
-
-key_mgmt = System.get_env("NERVES_NETWORK_KEY_MGMT") || "WPA-PSK"
+config :nerves,
+  interface: :wlan0,
+  ssid: System.get_env("NERVES_NETWORK_SSID"),
+  psk: System.get_env("NERVES_NETWORK_PSK"),
+  key_mgmt: System.get_env("NERVES_NETWORK_KEY_MGMT")
 
 config :drizzle,
-  location: %{latitude: 39.3898838, longitude: -104.8287546},
+  location: %{latitude: System.get_env("LATITUDE"), longitude: System.get_env("LONGITUDE")},
   utc_offset: -6,
   winter_months: [],
   zone_pins: %{
@@ -3072,18 +3074,8 @@ config :drizzle,
     ]
   }
 
-config :drizzle, :default,
-  wlan0: [
-    ssid: System.get_env("NERVES_NETWORK_SSID"),
-    psk: System.get_env("NERVES_NETWORK_PSK"),
-    key_mgmt: String.to_atom(key_mgmt)
-  ],
-  eth0: [
-    ipv4_address_method: :dhcp
-  ]
-
 config :darkskyx,
-  api_key: System.get_env("DARKSKY_API_KEY") || "b684189af566c4f854398b246a54665c",
+  api_key: System.get_env("DARKSKY_API_KEY"),
   defaults: [
     units: "us",
     lang: "en"

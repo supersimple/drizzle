@@ -30,12 +30,11 @@ defmodule Drizzle.Scheduler do
   end
 
   defp current_day_of_week do
-    utc_day_of_week =
-      DateTime.utc_now()
-      |> DateTime.to_date()
-      |> Date.day_of_week()
-      |> adjust_for_utc_offset()
-      |> day_number_as_atom()
+    DateTime.utc_now()
+    |> DateTime.to_date()
+    |> Date.day_of_week()
+    |> adjust_for_utc_offset()
+    |> day_number_as_atom()
   end
 
   defp current_time do

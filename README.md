@@ -1,6 +1,6 @@
 # Drizzle
 
-![logo](https://i.imgur.com/AGhYNdR.png)
+![logo](https://i.imgur.com/6kYR90I.png)
 
 Drizzle is a Nerves-based home sprinkler system.
 It is designed to support up to 8 zones, and will automatically adjust watering

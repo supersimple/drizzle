@@ -10,6 +10,9 @@ The system will also shut down when the temperature drops below a predetermined
 threshold (40ºF). You also have the option to set "Winter months", which are
 months where the system will not run regardless of temperature.
 
+## Wiring Diargram
+![wiring diagram](https://imgur.com/a/ITElIyz)
+
 ## Configuration
 
 For the system to work properly, you need to export some ENV variables.

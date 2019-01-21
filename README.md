@@ -11,7 +11,7 @@ threshold (40ºF). You also have the option to set "Winter months", which are
 months where the system will not run regardless of temperature.
 
 ## Wiring Diargram
-![wiring diagram](https://imgur.com/a/ITElIyz)
+![wiring diagram](https://i.imgur.com/Opf0RgV.png)
 
 ## Configuration
 

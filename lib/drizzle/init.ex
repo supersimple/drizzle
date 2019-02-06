@@ -1,7 +1,6 @@
 defmodule Drizzle.Init do
   use GenServer
 
-  @gpio_module Application.get_env(:drizzle, :gpio_module, ElixirALE.GPIO)
   @zone_pins Application.get_env(:drizzle, :zone_pins, %{})
   @wifi_interface Application.get_env(:nerves, :interface)
   @wifi_ssid Application.get_env(:nerves, :ssid)
@@ -29,8 +28,8 @@ defmodule Drizzle.Init do
     {:ok, state}
   end
 
-  defp register_pin(name, pin) do
-    {:ok, output_pid} = @gpio_module.start_link(pin, :output, name: name)
+  defp register_pin(_name, pin) do
+    {:ok, output_pid} = Drizzle.GPIO.open(pin, :output)
     output_pid
   end
 end

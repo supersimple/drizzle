@@ -17,6 +17,7 @@ config :drizzle,
   location: %{latitude: System.get_env("LATITUDE"), longitude: System.get_env("LONGITUDE")},
   utc_offset: -6,
   winter_months: [:jan, :feb, :nov, :dec],
+  soil_moisture_sensor: %{pin: 26, min: 0, max: 539},
   zone_pins: %{
     zone1: 7,
     zone2: 8,

@@ -13,6 +13,13 @@ config :nerves,
   psk: System.get_env("NERVES_NETWORK_PSK"),
   key_mgmt: System.get_env("NERVES_NETWORK_KEY_MGMT")
 
+config :nerves_init_gadget,
+  ifname: "usb0",
+  address_method: :dhcpd,
+  mdns_domain: "drizzle.local",
+  node_name: nil,
+  node_host: :mdns_domain
+
 config :drizzle,
   location: %{latitude: System.get_env("LATITUDE"), longitude: System.get_env("LONGITUDE")},
   utc_offset: -6,

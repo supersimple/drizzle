@@ -1,3 +1,3 @@
 use Mix.Config
 
-config :drizzle, gpio_module: ElixirALE.GPIO
+config :drizzle, gpio_module: Circuits.GPIO

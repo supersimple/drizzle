@@ -11,6 +11,7 @@ defmodule Drizzle.Weather do
   @low_temp 40
   @high_temp 90
   @default_temp 50
+  @soil_moisture_sensor Application.get_env(:drizzle, :soil_moisture_sensor, nil)
 
   @doc """
   weather_adjustment_factor/0 determines adjustments to make to watering time
@@ -26,7 +27,9 @@ defmodule Drizzle.Weather do
         |> Enum.filter(&(!is_nil(&1)))
         |> weather_info()
 
-      temperature_adjustment(low, high) * precipitation_adjustment(precipitation)
+      temperature_adjustment(low, high)
+      |> Kernel.*(precipitation_adjustment(precipitation))
+      |> Kernel.*(soil_moisture_adjustment(@soil_moisture_sensor))
     end
   end
 
@@ -51,9 +54,41 @@ defmodule Drizzle.Weather do
   defp temperature_adjustment(_low, _high), do: 1
 
   defp precipitation_adjustment(prec) when prec >= 1.0, do: 0
-  defp precipitation_adjustment(prec) when prec >= 0.5, do: 0.75
-  defp precipitation_adjustment(prec) when prec >= 0.25, do: 0.5
+  defp precipitation_adjustment(prec) when prec >= 0.5, do: 0.5
+  defp precipitation_adjustment(prec) when prec >= 0.25, do: 0.75
   defp precipitation_adjustment(_prec), do: 1
+
+  defp soil_moisture_adjustment(nil), do: 1
+
+  defp soil_moisture_adjustment(%{pin: pin, min: min, max: max}) do
+    # check pin for sensor reading.
+    moisture = Drizzle.IO.read_soil_moisture(pin)
+
+    # need to calibrate against a non-zero min
+    moisture_delta = max - min
+    moisture = moisture - min
+
+    case moisture do
+      val when val > moisture_delta * 0.9 -> 0.0
+      val when val > moisture_delta * 0.85 -> 0.1
+      val when val > moisture_delta * 0.8 -> 0.2
+      val when val > moisture_delta * 0.75 -> 0.45
+      val when val > moisture_delta * 0.7 -> 0.65
+      val when val > moisture_delta * 0.65 -> 0.8
+      val when val > moisture_delta * 0.6 -> 0.9
+      val when val > moisture_delta * 0.55 -> 0.95
+      val when val > moisture_delta * 0.5 -> 1.0
+      val when val > moisture_delta * 0.45 -> 1.05
+      val when val > moisture_delta * 0.4 -> 1.1
+      val when val > moisture_delta * 0.35 -> 1.2
+      val when val > moisture_delta * 0.3 -> 1.35
+      val when val > moisture_delta * 0.85 -> 1.55
+      val when val > moisture_delta * 0.2 -> 1.80
+      val when val > moisture_delta * 0.85 -> 1.90
+      val when val > moisture_delta * 0.1 -> 2.0
+      _ -> 2.0
+    end
+  end
 
   defp temps_and_precips(data) do
     Enum.map(data["hourly"]["data"], fn d ->

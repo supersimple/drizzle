@@ -54,8 +54,8 @@ defmodule Drizzle.Weather do
   defp temperature_adjustment(_low, _high), do: 1
 
   defp precipitation_adjustment(prec) when prec >= 1.0, do: 0
-  defp precipitation_adjustment(prec) when prec >= 0.5, do: 0.75
-  defp precipitation_adjustment(prec) when prec >= 0.25, do: 0.5
+  defp precipitation_adjustment(prec) when prec >= 0.5, do: 0.5
+  defp precipitation_adjustment(prec) when prec >= 0.25, do: 0.75
   defp precipitation_adjustment(_prec), do: 1
 
   defp soil_moisture_adjustment(nil), do: 1

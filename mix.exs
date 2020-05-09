@@ -33,7 +33,7 @@ defmodule Drizzle.MixProject do
   def application do
     [
       mod: {Drizzle.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:darkskyx, :logger, :runtime_tools]
     ]
   end
 
@@ -63,8 +63,10 @@ defmodule Drizzle.MixProject do
 
   defp deps(target) do
     [
-      {:nerves_init_gadget, "~> 0.6.0"},
-      {:nerves_time, "~> 0.2"}
+      {:nerves_time, "~> 0.2"},
+      {:nerves_pack, "~> 0.1.0"},
+      {:nerves_firmware_ssh, "~> 0.3"},
+      {:busybox, "~> 0.1"}
     ] ++ system(target)
   end
 

@@ -22,12 +22,13 @@ defmodule Drizzle.Application do
     ]
   end
 
-  def children(_target) do
+  def children(target) do
+    IO.puts "===>#{target}<==="
     [
       # Starts a worker by calling: Drizzle.Worker.start_link(arg)
       # {Drizzle.Worker, arg},
       {Drizzle.WeatherData, []},
-      {Drizzle.Init, []},
+      {Drizzle.IO, []},
       {Drizzle.Scheduler, %{}},
       {Drizzle.Forecaster, %{}},
       {Drizzle.TodaysEvents, []}

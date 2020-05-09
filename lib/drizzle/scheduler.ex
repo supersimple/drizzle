@@ -55,8 +55,8 @@ defmodule Drizzle.Scheduler do
     case Enum.find(TodaysEvents.current_state(), fn {time, _a, _z} ->
            time == current_time()
          end) do
-      {_time, :on, zone} -> Drizzle.IO.activate_zone(zone)
-      {_time, :off, zone} -> Drizzle.IO.deactivate_zone(zone)
+      {_time, :on, zone} -> Drizzle.IO.activate(zone)
+      {_time, :off, zone} -> Drizzle.IO.deactivate(zone)
       _ -> "Nothing to do right now."
     end
   end

@@ -51,6 +51,20 @@ information about targets see:
 
 https://hexdocs.pm/nerves/targets.html#content
 
+## Testing
+Getting Circuits.GPIO to work in stub mode is tricky, as it needs recompilation. You only need to recompile when you switch mix targets though:
+```sh
+$ rm -rf _build/
+$ MIX_ENV="test" MIX_TARGET="host" CIRCUITS_MIX_ENV="test" mix test
+...
+```
+
+when done with testing, clean all build artifacts and recompile:
+```sh
+$ rm -rf _build/
+$ MIX_TARGET="rpi3" mix firmware
+```
+
 ## Getting Started
 
 To start your Nerves app:

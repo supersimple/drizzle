@@ -2,44 +2,33 @@ defmodule Drizzle.IO do
   use GenServer
 
   @zone_pins Application.get_env(:drizzle, :zone_pins, %{})
-  @wifi_interface Application.get_env(:nerves, :interface)
-  @wifi_ssid Application.get_env(:nerves, :ssid)
-  @wifi_psk Application.get_env(:nerves, :psk)
-  @wifi_key_mgmt Application.get_env(:nerves, :key_mgmt)
 
+  # ======
   # Client
-
+  # ======
   def start_link(_args) do
-    GenServer.start_link(__MODULE__, [])
+    {:ok, _} = GenServer.start_link(__MODULE__, [], name: DrizzleIO)
   end
 
   def activate(zone) do
-    IO.puts "activate #{zone}"
-    GenServer.call(__MODULE__, {:activate, zone})
+    GenServer.cast(DrizzleIO, {:activate, zone})
   end
 
   def deactivate(zone) do
-    IO.puts "deactivate #{zone}"
-    GenServer.call(__MODULE__, {:deactivate, zone})
+    GenServer.cast(DrizzleIO, {:deactivate, zone})
   end
 
-  def read_soil_moisture(pin) do
-    {:ok, gpio} = Circuits.GPIO.open(pin, :input)
-    moisture = Circuits.GPIO.read(gpio)
-    Circuits.GPIO.close(gpio)
-    moisture
+  def read_soil_moisture(pin \\ 2) do
+    GenServer.call(DrizzleIO, {:read_soil_moisture, pin})
   end
 
+  # ======
   # Server
+  # ======
   def init(_state) do
-    # Nerves.Network.setup(
-    #   "#{@wifi_interface}",
-    #   ssid: @wifi_ssid,
-    #   key_mgmt: @wifi_key_mgmt,
-    #   psk: @wifi_psk
-    # )
-    # %{zone_name => %{:gpio =>.. , :currstate => true/false}
+    IO.puts("Starting Drizzle.IO")
     IO.inspect Circuits.GPIO.info, label: "Circuits.GPIO"
+    # %{zone_name => %{:gpio =>.. , :currstate => true/false}
     state =
       @zone_pins
       |> Enum.map(fn {name, pin} -> {name, pin |> init_output()} end)
@@ -47,23 +36,29 @@ defmodule Drizzle.IO do
     {:ok, state}
   end
 
-  # turn off all zones that are currently active
-  def handle_call(:activate, zone, state) do
-    IO.puts "handle activate #{zone}"
-    {:ok,
-    state |> Enum.map(fn {zone_name, %{gpio: gpio, currstate: _cst}} ->
-        {zone_name, %{
-          gpio: gpio,
-          currstate: cond do
-            zone_name == zone -> :ok = Circuits.GPIO.write(gpio, 0); 1
-            true              -> :ok = Circuits.GPIO.write(gpio, 1); 0
-          end}}
-        end)}
+  defp init_output(pin) do
+    {:ok, gpio} = Circuits.GPIO.open(pin, :output)
+    :ok = Circuits.GPIO.write(gpio, 1)
+    %{gpio: gpio, currstate: 0}
   end
 
-  def handle_call(:deactivate, zone, state) do
+  def handle_cast({:activate, zone}, state) do
+    IO.puts "handle activate #{zone}"
+    {:noreply,
+    state |> Enum.map(fn {zone_name, %{gpio: gpio, currstate: _cst}} ->
+      {zone_name, %{
+        gpio: gpio,
+        currstate: cond do
+          zone_name == zone -> :ok = Circuits.GPIO.write(gpio, 0); 1
+          # turn off all zones that are currently active
+          true              -> :ok = Circuits.GPIO.write(gpio, 1); 0
+        end}}
+     end)}
+  end
+
+  def handle_cast({:deactivate, zone}, state) do
     IO.puts "handle deactivate #{zone}"
-    {:ok,
+    {:noreply,
     state |> Enum.map(fn {zone_name, %{gpio: gpio, currstate: cst}} ->
       {zone_name, %{
         gpio: gpio,
@@ -74,11 +69,11 @@ defmodule Drizzle.IO do
       end)}
   end
 
-
-  defp init_output(pin) do
-    {:ok, gpio} = Circuits.GPIO.open(pin, :output)
-    :ok = Circuits.GPIO.write(gpio, 0)
-    %{gpio: gpio, curr_state: false}
+  def handle_call({:read_soil_moisture, pin}, _from, state) do
+    {:ok, gpio} = Circuits.GPIO.open(pin, :input)
+    moisture = Circuits.GPIO.read(gpio)
+    Circuits.GPIO.close(gpio)
+    {:reply, moisture, state}
   end
 
 end

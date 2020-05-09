@@ -10,30 +10,25 @@ The system will also shut down when the temperature drops below a predetermined
 threshold (40ºF). You also have the option to set "Winter months", which are
 months where the system will not run regardless of temperature.
 
-## Wiring Diargram
-![wiring diagram](https://i.imgur.com/Opf0RgV.png)
-
 ## Configuration
 
-For the system to work properly, you need to export some ENV variables.
-
-For wifi access, set the following vars:
-- `NERVES_NETWORK_SSID=<your SSID here>`
-- `NERVES_NETWORK_PSK=<your Wifi password here>`
-- `NERVES_NETWORK_KEY_MGMT="WPA-PSK"`
-
-For weather forecasts, set the following:
+For the system to work properly, you need to export some ENV variables. For weather forecasts, set the following:
 - `LATITUDE=<your local latitude>`
 - `LONGITUDE=<your local longitude>`
 - `DARKSKY_API_KEY=<your 32 character API key>`
 _Weather forecasts are retrieved from Dark Sky. You can get a free API key at:
 [https://darksky.net/dev](https://darksky.net/dev)._
 
+## First boot
+When your device starts up *for its first time* it will need to know the SSID and passphrase (aka PSK, pre-shared key) for the wireless SSID its going to connect to (for weather updates for example). This process is done using the [VintageNetWizard](https://hexdocs.pm/vintage_net_wizard/readme.html), so this means you have to temporarily connect your mobile or laptop to the wireless access point named "nerves_xxxxx" (where xxxxx is an automatically generated ID for your nerves machine) and access a basic web portal to select your home network and provide its password. 
+
+Once you select a wireless network and provide the credentials, just double-check your entered the correct passphrase and click on `Complete without validation` button (as validation involves the AP dropping the connection to test connecting to your home router's AP and then reconnecting it back to the temporary AP later - so I find it error-prone and inconvenient).
+
+After the process is complete, the WiFi card will be automatically configured with the SSID and passphrase upon next boot-ups.
+
 ## How It Works
 
-When your device starts up it runs through the setup.
 - Starts the weather data agent, which stores state for the previous 12 hours and next 24 hours of weather. Until the system has been online for 12 hours, your previous 12 hours will not be set.
-- Connects to wifi.
 - Registers each of your zones with a corresponding GPIO pin on your device.
 - Initializes a schedule of todays events. (This will happen at midnight each day or whenever the schedule for today is empty.) This means starting up a genserver and loading it with the schedule from your config file.
 - Starts a recurring genserver that checks the weather each hour and updates the weather data agent.

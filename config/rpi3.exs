@@ -23,25 +23,9 @@ if keys == [],
 config :nerves_firmware_ssh,
   authorized_keys: Enum.map(keys, &File.read!/1)
 
-config :vintage_net,
-  regulatory_domain: "GR",
-  config: [
-    {"wlan0",
-      %{
-        type: VintageNetWiFi,
-        vintage_net_wifi: %{
-          networks: [
-            %{
-              key_mgmt: "NERVES_NETWORK_KEY_MGMT" |> System.get_env("WPA_PSK") |> String.downcase |> String.to_atom,
-              ssid: System.get_env("NERVES_NETWORK_SSID"),
-              psk: System.get_env("NERVES_NETWORK_PSK"),
-            }
-          ]
-        },
-        ipv4: %{method: :dhcp},
-      }
-    }
-  ]
+# GPIO pin 2 is directly next to 3.3V so adding a jumper over them for
+# 5 seconds should suffice to get the vintage_wifi_wizard up and running
+config :vintage_net_wizard, gpio_pin: 2
 
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

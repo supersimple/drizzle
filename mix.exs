@@ -50,11 +50,12 @@ defmodule Drizzle.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:nerves, "~> 1.6", runtime: false},
       {:circuits_gpio, "~> 0.1"},
-      {:shoehorn, "~> 0.6"},
       {:darkskyx, "~> 1.0.0"},
-      {:poison, "~> 3.0", override: true}
+      {:nerves, "~> 1.6", runtime: false},
+      {:poison, "~> 3.0", override: true},
+      {:shoehorn, "~> 0.6"},
+      {:toolshed, "~> 0.2"}
     ] ++ deps(@target)
   end
 
@@ -64,9 +65,9 @@ defmodule Drizzle.MixProject do
   defp deps(target) do
     [
       {:nerves_time, "~> 0.2"},
-      {:nerves_pack, "~> 0.1.0"},
+      {:nerves_pack, "~> 0.3.0"},
       {:nerves_firmware_ssh, "~> 0.3"},
-      {:busybox, "~> 0.1"}
+      {:vintage_net_wizard, "~> 0.2.3"}
     ] ++ system(target)
   end
 

@@ -24,6 +24,10 @@ defmodule Drizzle.Application do
 
   def children(target) do
     IO.puts "===>#{target}<==="
+    # start the WiFi wizard if the wireless interface is not configured
+    unless "wlan0" in VintageNet.configured_interfaces() do
+      VintageNetWizard.run_wizard
+    end
     [
       # Starts a worker by calling: Drizzle.Worker.start_link(arg)
       # {Drizzle.Worker, arg},

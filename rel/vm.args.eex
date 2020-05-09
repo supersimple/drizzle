@@ -5,7 +5,7 @@
 ##  for read only filesystem.
 
 # -name drizzle@0.0.0.0
--setcookie 1S2fT0azgx773E5bSWpDUFWG4vx+E6DeKA2ZLb12gTNDU/X1A8ZbwaOsEgyog3Nh
+-setcookie <%= @release.options[:cookie] %>
 
 ## Use Ctrl-C to interrupt the current shell rather than invoking the emulator's
 ## break handler and possibly exiting the VM.

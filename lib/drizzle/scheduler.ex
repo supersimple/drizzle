@@ -18,7 +18,7 @@ defmodule Drizzle.Scheduler do
   end
 
   def handle_info(:work, state) do
-    IO.puts("Checking watering schedule for on/off times")
+    #IO.puts("Checking watering schedule for on/off times")
     execute_scheduled_events()
     schedule_work()
     {:noreply, state}

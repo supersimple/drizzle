@@ -25,6 +25,37 @@ When your device starts up *for its first time* it will need to know the SSID an
 Once you select a wireless network and provide the credentials, just double-check your entered the correct passphrase and click on `Complete without validation` button (as validation involves the AP dropping the connection to test connecting to your home router's AP and then reconnecting it back to the temporary AP later - so I find it error-prone and inconvenient).
 
 After the process is complete, the WiFi card will be automatically configured with the SSID and passphrase upon next boot-ups.
+The device is now discoverable as `drizzle.local` (try pinging it!) and exposes an SSH server into the Erlang VM console: 
+```
+$ ping drizzle.local
+PING drizzle.local (192.168.8.111) 56(84) bytes of data.
+64 bytes from 192.168.8.111 (192.168.8.111): icmp_seq=1 ttl=64 time=12.2 ms
+64 bytes from 192.168.8.111 (192.168.8.111): icmp_seq=2 ttl=64 time=6.41 ms
+^C
+--- drizzle.local ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+rtt min/avg/max/mdev = 6.407/9.304/12.201/2.897 ms
+ekarak@ekarak-Latitude-7400:~$ ssh drizzle.local
+The authenticity of host 'drizzle.local (192.168.8.111)' can't be established.
+RSA key fingerprint is SHA256:s6rDEVL9YH3LaEDRxRX4qStknwY3560Vs5wkQ4wQMmA.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'drizzle.local' (RSA) to the list of known hosts.
+Interactive Elixir (1.10.3) - press Ctrl+C to exit (type h() ENTER for help)
+The Nerves.Runtime.Helpers have been removed. Use https://hex.pm/packages/toolshed instead.
+iex(1)> 
+```
+
+## OTA firmware upgrades
+
+Once you've pinged it succesfully you can leverage nerves_firmware_ssh mechanism to do OTA (over-the-air) firmware upgrades (so that you don't need to swap the microSD card in and out from your RPi), as follows:
+```sh
+# write out the firmware upload script (upload.sh), you only need this done once
+$ mix firmware.gen.script
+# generate firmware file
+$ mix firmware
+# run the upload script
+$ ./upload.sh drizzle.local ./_build/rpi3/rpi3_dev/nerves/images/drizzle.fw
+```
 
 ## How It Works
 

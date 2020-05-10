@@ -67,6 +67,7 @@ defmodule Drizzle.MixProject do
       {:nerves_time, "~> 0.2"},
       {:nerves_pack, "~> 0.3.0"},
       {:nerves_firmware_ssh, "~> 0.3"},
+      {:nerves_runtime_shell, "~> 0.1.0"},
       {:vintage_net_wizard, "~> 0.2.3"}
     ] ++ system(target)
   end

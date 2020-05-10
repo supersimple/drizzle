@@ -8,9 +8,10 @@ defmodule Drizzle.Weather do
                        longitude: -104.8287546
                      })
   @winter_months Application.get_env(:drizzle, :winter_months, [])
-  @low_temp 40
-  @high_temp 90
-  @default_temp 50
+  # TODO: these should have UNITS as context
+  @low_temp 5
+  @high_temp 32
+  @default_temp 10
   @soil_moisture_sensor Application.get_env(:drizzle, :soil_moisture_sensor, nil)
 
   @doc """

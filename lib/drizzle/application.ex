@@ -3,7 +3,7 @@ defmodule Drizzle.Application do
   # for more information on OTP Applications
   @moduledoc false
 
-  @target Mix.Project.config()[:target]
+  @target Mix.target()
 
   use Application
 
@@ -22,12 +22,17 @@ defmodule Drizzle.Application do
     ]
   end
 
-  def children(_target) do
+  def children(target) do
+    IO.puts "===>#{target}<==="
+    # start the WiFi wizard if the wireless interface is not configured
+    unless "wlan0" in VintageNet.configured_interfaces() do
+      VintageNetWizard.run_wizard
+    end
     [
       # Starts a worker by calling: Drizzle.Worker.start_link(arg)
       # {Drizzle.Worker, arg},
       {Drizzle.WeatherData, []},
-      {Drizzle.Init, []},
+      {Drizzle.IO, []},
       {Drizzle.Scheduler, %{}},
       {Drizzle.Forecaster, %{}},
       {Drizzle.TodaysEvents, []}

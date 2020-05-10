@@ -7,38 +7,27 @@ use Mix.Config
 
 import_config "#{Mix.Project.config()[:target]}.exs"
 
-config :nerves,
-  interface: :wlan0,
-  ssid: System.get_env("NERVES_NETWORK_SSID"),
-  psk: System.get_env("NERVES_NETWORK_PSK"),
-  key_mgmt: System.get_env("NERVES_NETWORK_KEY_MGMT")
-
-config :nerves_init_gadget,
-  ifname: "usb0",
-  address_method: :dhcpd,
-  mdns_domain: "drizzle.local",
-  node_name: nil,
-  node_host: :mdns_domain
-
 config :drizzle,
   location: %{latitude: System.get_env("LATITUDE"), longitude: System.get_env("LONGITUDE")},
-  utc_offset: -6,
+  utc_offset: 2,
   winter_months: [:jan, :feb, :nov, :dec],
-  soil_moisture_sensor: %{pin: 26, min: 0, max: 539},
+  #soil_moisture_sensor: %{pin: 26, min: 0, max: 539},
+  # For Waveshare RPi relay board (B variant, 8 relays)
+  # https://www.waveshare.com/rpi-relay-board-b.htm
   zone_pins: %{
-    zone1: 7,
-    zone2: 8,
-    zone3: 25,
-    zone4: 24,
-    zone5: 23,
-    zone6: 18,
-    zone7: 15,
-    zone8: 14
+    zone1: 5,
+    zone2: 6,
+    zone3: 13,
+    zone4: 16,
+    zone5: 19,
+    zone6: 20,
+    zone7: 21,
+    zone8: 26
   },
   # watering times are defined as key {start_time, end_time}
   available_watering_times: %{
-    morning: {500, 800},
-    evening: {2100, 2300}
+    morning: {300, 600}
+    #evening: {2100, 2300}
   },
   # schedule is defined as {zone, watering_time_key, duration_in_minutes}
   schedule: %{
@@ -82,7 +71,7 @@ config :drizzle,
 config :darkskyx,
   api_key: System.get_env("DARKSKY_API_KEY"),
   defaults: [
-    units: "us",
+    units: "auto",
     lang: "en"
   ]
 
@@ -94,8 +83,11 @@ config :nerves, :firmware, rootfs_overlay: "rootfs_overlay"
 # docs for separating out critical OTP applications such as those
 # involved with firmware updates.
 config :shoehorn,
-  init: [:nerves_runtime],
+  init: [:nerves_runtime, :nerves_pack],
   app: Mix.Project.config()[:app]
+
+config :nerves_pack,
+  host: [:hostname, "drizzle"]
 
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

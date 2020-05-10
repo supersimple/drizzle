@@ -18,7 +18,7 @@ defmodule Drizzle.Scheduler do
   end
 
   def handle_info(:work, state) do
-    IO.puts("Checking watering schedule for on/off times")
+    #IO.puts("Checking watering schedule for on/off times")
     execute_scheduled_events()
     schedule_work()
     {:noreply, state}
@@ -55,8 +55,8 @@ defmodule Drizzle.Scheduler do
     case Enum.find(TodaysEvents.current_state(), fn {time, _a, _z} ->
            time == current_time()
          end) do
-      {_time, :on, zone} -> Drizzle.IO.activate_zone(zone)
-      {_time, :off, zone} -> Drizzle.IO.deactivate_zone(zone)
+      {_time, :on, zone} -> Drizzle.IO.activate(zone)
+      {_time, :off, zone} -> Drizzle.IO.deactivate(zone)
       _ -> "Nothing to do right now."
     end
   end

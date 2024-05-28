@@ -10,6 +10,11 @@ The system will also shut down when the temperature drops below a predetermined
 threshold (40ºF). You also have the option to set "Winter months", which are
 months where the system will not run regardless of temperature.
 
+## You should know...
+I talked about this project at [Lonestar Elixir](https://www.youtube.com/watch?v=qklciKp7sD8) in 2019.
+
+This repo hasnt been maintained in a while, so some things might not work (I think the darksky API shutdown in 2023, for instance.)
+
 ## Configuration
 
 For the system to work properly, you need to export some ENV variables. For weather forecasts, set the following:
